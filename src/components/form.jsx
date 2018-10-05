@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 
+const API_URL = "http://localhost:5000/myfacts";
+
 class Form extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      error: null,
+      isLoaded: false
+    };
+
     this.factNumber = React.createRef();
     this.fact = React.createRef();
     this.loader = React.createRef();
@@ -24,6 +31,26 @@ class Form extends Component {
     this.loader.current.style.visibility = "visible";
 
     console.log(factPost);
+  }
+  componentDidMount() {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            isLoaded: true
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      );
   }
   render() {
     return (
