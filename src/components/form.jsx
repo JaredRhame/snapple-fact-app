@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-
-const API_URL = "http://localhost:5000/myfacts";
+import FactList from "./listAllFacts.js";
+const API_URL = "http://localhost:5000/facts";
 
 class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
-      isLoaded: false
+      fact: {}
     };
-
+    this.form = React.createRef();
     this.factNumber = React.createRef();
     this.fact = React.createRef();
     this.loader = React.createRef();
@@ -19,45 +18,39 @@ class Form extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const factNumber = this.factNumber.current.value;
-    const fact = this.fact.current.value;
+    let factNumber = this.factNumber.current.value;
+    let fact = this.fact.current.value;
 
-    const factPost = {
-      factNumber,
-      fact
-    };
+    this.setState({
+      fact: {
+        factNumber,
+        fact
+      }
+    });
 
-    e.target.style.display = "none";
+    this.form.current.style.display = "none";
     this.loader.current.style.visibility = "visible";
 
-    console.log(factPost);
+    fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ factNumber, fact }),
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(response => response.json())
+      .then(createdFact => {
+        console.log(createdFact);
+        this.loader.current.style.display = "none";
+        this.form.current.reset();
+        this.form.current.style.display = "block";
+      });
   }
-  componentDidMount() {
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(
-        result => {
-          this.setState({
-            isLoaded: true
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
-  }
+
   render() {
     return (
       <main>
         <h2 id="facts-title">Snapple Facts</h2>
 
-        <form id="fact-form" onSubmit={this.handleSubmit}>
+        <form id="fact-form" onSubmit={this.handleSubmit} ref={this.form}>
           <label>Fact Number</label>
           <input
             type="text"
@@ -82,6 +75,8 @@ class Form extends Component {
           </button>
         </form>
         <div className="loader" ref={this.loader} />
+        <h2 className="headers">Your Recent Facts</h2>
+        <FactList />
       </main>
     );
   }
