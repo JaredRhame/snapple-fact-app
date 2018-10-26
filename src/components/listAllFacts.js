@@ -14,7 +14,7 @@ class FactList extends Component {
         data.reverse();
         let facts = data.map(fact => {
           return (
-            <div key={fact.id}>
+            <div key={fact._id}>
               <h3>{fact.factNumber}</h3>
               <p>{fact.factContent}</p>
             </div>
@@ -24,7 +24,6 @@ class FactList extends Component {
       });
   }
   componentDidUpdate() {
-    let factArr = [];
     fetch("http://localhost:5000/facts")
       .then(response => response.json())
       .then(data => {
