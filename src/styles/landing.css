@@ -1,0 +1,47 @@
+.sub-btn {
+  background-color: #9b2222;
+  color: white;
+  width: 25%;
+  margin: 45px;
+}
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  height: 100%;
+  margin-top: 150px;
+}
+
+.p-txt {
+  font-size: 20px;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+}
+/* parallax for landing Page */
+
+#apple-parallax {
+  height: 330px;
+  width: 100vw;
+  background-image: url("../apples.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.3;
+}
+.rnd-fact {
+  margin: 45px;
+}
+
+.rnd-fact h2 {
+  border: none;
+}
+
+.goal-section {
+  margin: 45px;
+}
+
+.goal-section h2 {
+}
