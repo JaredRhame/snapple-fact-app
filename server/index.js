@@ -28,6 +28,14 @@ app.get("/facts", (req, res) => {
     res.json(facts);
   });
 });
+
+app.post("/api/v1/auth/google", (req, res) => {
+  console.log("successfull logged in!");
+
+  res.json({
+    message: "successfull logged in!"
+  });
+});
 //Makes sure that every submission has a factNumber and factContent
 function isValidFact(fact) {
   return (

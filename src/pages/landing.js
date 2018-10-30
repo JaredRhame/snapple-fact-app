@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Link } from "react-router-dom";
+import { GoogleAPI, GoogleLogin, GoogleLogout } from "react-google-oauth";
+require("dotenv").config();
 
 class Landing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      randomFact: ""
+      randomFact: "",
+      isAuthenticated: false
     };
   }
   componentDidMount() {
@@ -23,6 +26,27 @@ class Landing extends Component {
         this.setState({ randomFact: randomFact });
       });
   }
+  googleResponse = response => {
+    const tokenBlob = new Blob(
+      [JSON.stringify({ access_token: response.accessToken }, null, 2)],
+      { type: "application/json" }
+    );
+    const options = {
+      method: "POST",
+      body: tokenBlob,
+      mode: "cors",
+      cache: "default"
+    };
+    fetch("http://localhost:5000/api/v1/auth/google", options).then(r => {
+      const token = r.headers.get("x-auth-token");
+      r.json().then(user => {
+        if (token) {
+          this.setState({ isAuthenticated: true, user, token });
+        }
+      });
+    });
+  };
+
   render() {
     return (
       <main className="landing">
@@ -32,6 +56,20 @@ class Landing extends Component {
         <button type="submit" className="sub-btn">
           Log in
         </button>
+        <GoogleAPI
+          clientId="970124665905-au60n6u51c1bqhcn9qbgadk03oqvgbrk.apps.googleusercontent.com"
+          onUpdateSigninStatus={this.responseGoogle}
+          onInitFailure={this.responseGoogle}
+        >
+          <div>
+            <div>
+              <GoogleLogin />
+            </div>
+            <div>
+              <GoogleLogout />
+            </div>
+          </div>
+        </GoogleAPI>
         <p className="p-txt">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
