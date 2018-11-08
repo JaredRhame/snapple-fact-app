@@ -4,12 +4,19 @@ const monk = require("monk");
 const app = express();
 const Filter = require("bad-words");
 const rateLimit = require("express-rate-limit");
+var router = express.Router();
+var { generateToken, sendToken } = require("./utils2/token.utils.js");
+var passport = require("passport");
+var config = require("./config");
+require("./passport")();
 
 const dbURL =
   "mongodb://Zinoh:YmXiaG7B2y2jd98@ds131902.mlab.com:31902/snapple-facts";
 const db = monk(dbURL);
 // Collection in DB
 const facts = db.get("facts");
+// const userDB = db.get("users");
+
 const filter = new Filter();
 
 app.use(cors());
@@ -29,13 +36,29 @@ app.get("/facts", (req, res) => {
   });
 });
 
-app.post("/api/v1/auth/google", (req, res) => {
-  console.log("successfull logged in!");
+router.route("/auth/google").post(
+  passport.authenticate("google-token", { session: false }),
 
-  res.json({
-    message: "successfull logged in!"
-  });
-});
+  function(req, res, next) {
+    // const googleUser = {
+    //   id: req.user.id
+    // };
+    if (!req.user) {
+      return res.send(401, "User Not Authenticated");
+    }
+    req.auth = {
+      id: req.user.id
+    };
+    // userDB.insert(googleUser).then(createdUser => {
+    //   res.json(createdUser);
+    // });
+    next();
+  },
+  generateToken,
+  sendToken
+);
+
+// module.exports = router;
 //Makes sure that every submission has a factNumber and factContent
 function isValidFact(fact) {
   return (

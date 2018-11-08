@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Link } from "react-router-dom";
+// import { Router, Route } from "react-router";
+
 import { GoogleAPI, GoogleLogin, GoogleLogout } from "react-google-oauth";
+import NavBar from "../components/navBar.js";
 require("dotenv").config();
 
 class Landing extends Component {
@@ -8,9 +11,19 @@ class Landing extends Component {
     super(props);
     this.state = {
       randomFact: "",
-      isAuthenticated: false
+      isAuthenticated: false,
+      user: null,
+      token: ""
     };
   }
+
+  logout = () => {
+    this.setState({ isAuthenticated: false, token: "", user: null });
+  };
+
+  onFailure = error => {
+    alert(error);
+  };
   componentDidMount() {
     fetch("http://localhost:5000/facts")
       .then(response => response.json())
@@ -53,9 +66,7 @@ class Landing extends Component {
         <h1 className="headers">
           Come together, and share your Snapple Facts!
         </h1>
-        <button type="submit" className="sub-btn">
-          Log in
-        </button>
+
         <GoogleAPI
           clientId="970124665905-au60n6u51c1bqhcn9qbgadk03oqvgbrk.apps.googleusercontent.com"
           onUpdateSigninStatus={this.responseGoogle}
@@ -65,9 +76,6 @@ class Landing extends Component {
             <div>
               <GoogleLogin />
             </div>
-            <div>
-              <GoogleLogout />
-            </div>
           </div>
         </GoogleAPI>
         <p className="p-txt">
@@ -76,15 +84,12 @@ class Landing extends Component {
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex ea commodo consequat. Duis aute irure dolor in
         </p>
-
         <div className="rnd-fact">
           <h2 className="headers">Random Fact:</h2>
 
           <p>{this.state.randomFact}</p>
         </div>
-
         <div className="parallax" id="apple-parallax" />
-
         <div className="goal-section">
           <h2 className="headers">Our Goal</h2>
 
