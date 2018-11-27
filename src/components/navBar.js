@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Landing from "../pages/landing.js";
 import Form from "./form.jsx";
+import "../styles/navbar.css";
 class NavBar extends Component {
   constructor(props) {
     super(props);
@@ -9,15 +10,15 @@ class NavBar extends Component {
   render() {
     return (
       <header>
-        <nav>
-          <ul>
-            <li>
+        <nav className="container">
+          <ul className="row">
+            <li className="four columns active">
               <Link to="/">Home</Link>
             </li>
-            <li>
+            <li className="four columns">
               <Link to="/factlist">Fact List</Link>
             </li>
-            <li>
+            <li className="four columns">
               <Link to="/form">Form</Link>
             </li>
           </ul>
