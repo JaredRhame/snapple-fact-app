@@ -1,0 +1,25 @@
+header {
+  background-color: #ffffff;
+  vertical-align: center;
+  padding-top: 55px;
+}
+
+a {
+  text-decoration: none;
+  color: #916d6d;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+li {
+  line-height: 50px;
+}
+
+.active {
+  border-bottom: 3px solid black;
+}
